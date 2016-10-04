@@ -79,7 +79,7 @@ composer require orken/select-behavior-cakephp3
 In your bootstrap.php
 
 ```
-Plugin::load('List4Vue');
+Plugin::load('SelectBehavior');
 ```
 
 In each Model/Table file you want to use this behavior add
@@ -87,7 +87,7 @@ In each Model/Table file you want to use this behavior add
 public function initialize(array $config)
 {
   ...
-  $this->addBehavior('List4Vue.Vuelist');
+  $this->addBehavior('SelectBehavior.Selectlist');
   ...
 }
 
@@ -95,5 +95,5 @@ public function initialize(array $config)
 
 ## Usage
 
-Syntax is fully complatible with find('list').
+Syntax is fully complatible with find('list'). Use *find('select')* .
 
