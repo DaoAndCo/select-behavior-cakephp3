@@ -7,7 +7,7 @@ use Cake\ORM\Query;
 class VuelistBehavior extends Behavior
 {
 
-  public function findJson(Query $query, array $options)
+  public function findSelect(Query $query, array $options)
   {
     $options += [
       'keyField'   => $this->_table->primaryKey(),
@@ -20,7 +20,7 @@ class VuelistBehavior extends Behavior
     {
       if (is_null($options['groupField']))
       {
-        return ['items' => $this->_addkeys($results,$options)];
+        return [ ['items' => $this->_addkeys($results,$options)] ];
       }
       else
       {
@@ -28,8 +28,8 @@ class VuelistBehavior extends Behavior
         foreach ($results as $group => $result)
         {
           $list[] = [
-            'groupField' => $group,
-            'items'      => $this->_addkeys($result,$options)
+            'group' => $group,
+            'items' => $this->_addkeys($result,$options)
           ];
         }
         return $list;
@@ -43,8 +43,8 @@ class VuelistBehavior extends Behavior
     foreach ($items as $key => $item)
     {
       $list[] = [
-        $options['keyField']   => $key,
-        $options['valueField'] => $item
+        'key'   => $key,
+        'value' => $item
       ];
     }
     return $list;
