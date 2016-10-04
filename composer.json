@@ -18,12 +18,12 @@
     },
     "autoload": {
         "psr-4": {
-            "List4Vue\\": "src"
+            "SelectBehavior\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "List4Vue\\Test\\": "tests",
+            "SelectBehavior\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     }
