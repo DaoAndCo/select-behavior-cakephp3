@@ -6,72 +6,48 @@ use Cake\ORM\Query;
 
 class VuelistBehavior extends Behavior
 {
+
   public function findJson(Query $query, array $options)
   {
     $options += [
-        'keyField'   => $this->_table->primaryKey(),
-        'valueField' => $this->_table->displayField(),
-        'groupField' => null
+      'keyField'   => $this->_table->primaryKey(),
+      'valueField' => $this->_table->displayField(),
+      'groupField' => null
     ];
-    if (!$query->clause('select') &&
-        !is_object($options['keyField']) &&
-        !is_object($options['valueField']) &&
-        !is_object($options['groupField'])
-    ) {
-        $fields = array_merge(
-            (array)$options['keyField'],
-            (array)$options['valueField'],
-            (array)$options['groupField']
-        );
-        $columns = $this->_table->schema()->columns();
-        if (count($fields) === count(array_intersect($fields, $columns))) {
-            $query->select($fields);
-        }
-    }
+    $query = $this->_table->findList($query,$options);
 
-
-    return $query->formatResults(function ($results) use ($options) {
+    return $query->formatResults(function ($results) use ($options)
+    {
       if (is_null($options['groupField']))
       {
-        $mapper = function ($row) use ($options) {
-          return [
-            $options['keyField']   => $row[$options['keyField']] ,
-            $options['valueField'] => $row[$options['valueField']] ,
-          ];
-        };
-        $reducer = function ($rows,$row) {
-          $rows[] = $row;
-          return $rows;
-        };
-      } else {
-        $mapper = function ($row) use ($options) {
-          return [ $row[ $options['groupField'] ]  => [
-              $options['keyField']   => $row[$options['keyField']] ,
-              $options['valueField'] => $row[$options['valueField']] ,
-            ]
-          ];
-        };
-        $reducer = function ($rows,$row) {
-          $rows[key($row)][] = current($row);
-          return $rows;
-        };
+        return ['items' => $this->_addkeys($results,$options)];
       }
-      $map    = $results->map( $mapper );
-      $reduce = $map->reduce( $reducer , [] );
-      if (is_null($options['groupField']))
+      else
       {
-        $result[] = [
-          'items' => $reduce
-        ];
-      } else {
-        foreach ($reduce as $key => $value) {
-          $result[] = [
-            'groupField' => $key,
-            'items'      => $value
+        $list = [];
+        foreach ($results as $group => $result)
+        {
+          $list[] = [
+            'groupField' => $group,
+            'items'      => $this->_addkeys($result,$options)
           ];
         }
+        return $list;
       }
-      return $result;
     });
   }
+
+  protected function _addKeys($items,$options)
+  {
+    $list = [];
+    foreach ($items as $key => $item)
+    {
+      $list[] = [
+        $options['keyField']   => $key,
+        $options['valueField'] => $item
+      ];
+    }
+    return $list;
+  }
+
 }
