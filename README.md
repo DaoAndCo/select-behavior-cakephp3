@@ -66,6 +66,29 @@ $list = [
 
 ##Installation
 
+You can install this plugin into your CakePHP application using [composer](http://getcomposer.org).
+
+The recommended way to install composer packages is:
+
 ```
 composer require orken/select-behavior-cakephp3
+```
+
+
+## Setting up your CakePHP application
+In your bootstrap.php
+
+```
+Plugin::load('List4Vue');
+```
+
+In each Model/Table file you want to use this behavior add
+```
+public function initialize(array $config)
+{
+  ...
+  $this->addBehavior('List4Vue.Vuelist');
+  ...
+}
+
 ```
