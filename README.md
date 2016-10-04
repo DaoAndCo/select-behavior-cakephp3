@@ -93,3 +93,7 @@ public function initialize(array $config)
 
 ```
 
+## Usage
+
+Syntax is fully complatible with find('list').
+
